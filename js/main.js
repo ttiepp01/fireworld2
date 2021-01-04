@@ -1,32 +1,72 @@
-/*price range*/
+/*
+	Introspect by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+*/
 
-if ($.fn.slider) {
-    $('#sl2').slider();
-}
+(function($) {
 
-var RGBChange = function () {
-    $('#RGB').css('background', 'rgb(' + r.getValue() + ',' + g.getValue() + ',' + b.getValue() + ')')
-};
+	skel.breakpoints({
+		xlarge:	'(max-width: 1680px)',
+		large:	'(max-width: 1280px)',
+		medium:	'(max-width: 980px)',
+		small:	'(max-width: 736px)',
+		xsmall:	'(max-width: 480px)'
+	});
 
-/*scroll to top*/
+	$(function() {
 
-$(document).ready(function () {
-    $(function () {
-        $.scrollUp({
-            scrollName: 'scrollUp', // Element ID
-            scrollDistance: 300, // Distance from top/bottom before showing element (px)
-            scrollFrom: 'top', // 'top' or 'bottom'
-            scrollSpeed: 300, // Speed back to top (ms)
-            easingType: 'linear', // Scroll to top easing (see http://easings.net/)
-            animation: 'fade', // Fade, slide, none
-            animationSpeed: 200, // Animation in speed (ms)
-            scrollTrigger: false, // Set a custom triggering element. Can be an HTML string or jQuery object
-            //scrollTarget: false, // Set a custom target element for scrolling to the top
-            scrollText: '<i class="fa fa-angle-up"></i>', // Text for element, can contain HTML
-            scrollTitle: false, // Set a custom <a> title if required.
-            scrollImg: false, // Set true to use image
-            activeOverlay: false, // Set CSS color to display scrollUp active point, e.g '#00FFFF'
-            zIndex: 2147483647 // Z-Index for the overlay
-        });
-    });
-});
+		var	$window = $(window),
+			$body = $('body');
+
+		// Disable animations/transitions until the page has loaded.
+			$body.addClass('is-loading');
+
+			$window.on('load', function() {
+				window.setTimeout(function() {
+					$body.removeClass('is-loading');
+				}, 100);
+			});
+
+		// Fix: Placeholder polyfill.
+			$('form').placeholder();
+
+		// Prioritize "important" elements on medium.
+			skel.on('+medium -medium', function() {
+				$.prioritize(
+					'.important\\28 medium\\29',
+					skel.breakpoint('medium').active
+				);
+			});
+
+		// Off-Canvas Navigation.
+
+			// Navigation Panel Toggle.
+				$('<a href="#navPanel" class="navPanelToggle"></a>')
+					.appendTo($body);
+
+			// Navigation Panel.
+				$(
+					'<div id="navPanel">' +
+						$('#nav').html() +
+						'<a href="#navPanel" class="close"></a>' +
+					'</div>'
+				)
+					.appendTo($body)
+					.panel({
+						delay: 500,
+						hideOnClick: true,
+						hideOnSwipe: true,
+						resetScroll: true,
+						resetForms: true,
+						side: 'left'
+					});
+
+			// Fix: Remove transitions on WP<10 (poor/buggy performance).
+				if (skel.vars.os == 'wp' && skel.vars.osVersion < 10)
+					$('#navPanel')
+						.css('transition', 'none');
+
+	});
+
+})(jQuery);
